@@ -6,5 +6,37 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-  }
+    "api-mindmap": {
+      "projectType": "library",
+      "root": "projects/api-mindmap",
+      "sourceRoot": "projects/api-mindmap/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/api-mindmap/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/api-mindmap/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/api-mindmap/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/api-mindmap/src/test.ts",
+            "tsConfig": "projects/api-mindmap/tsconfig.spec.json",
+            "karmaConfig": "projects/api-mindmap/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "api-mindmap"
 }
