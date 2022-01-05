@@ -8,9 +8,8 @@ describe('ApiMindmapComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApiMindmapComponent ]
-    })
-    .compileComponents();
+      declarations: [ApiMindmapComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -3,10 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "api-mindmap": [
-        "dist/api-mindmap/api-mindmap",
-        "dist/api-mindmap"
-      ]
+      "api-mindmap": ["dist/api-mindmap/api-mindmap", "dist/api-mindmap"]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -24,10 +21,7 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ]
+    "lib": ["es2020", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
