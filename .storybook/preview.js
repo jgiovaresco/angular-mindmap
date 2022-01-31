@@ -1,3 +1,6 @@
+window.document.body?.classList.add("mat-app-background");
+window.document.body?.classList.add("mat-typography");
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   backgrounds: {

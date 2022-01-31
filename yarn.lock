@@ -179,6 +179,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/cdk@npm:~13.1.0":
+  version: 13.1.3
+  resolution: "@angular/cdk@npm:13.1.3"
+  dependencies:
+    parse5: ^5.0.0
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": ^13.0.0 || ^14.0.0-0
+    "@angular/core": ^13.0.0 || ^14.0.0-0
+    rxjs: ^6.5.3 || ^7.4.0
+  dependenciesMeta:
+    parse5:
+      optional: true
+  checksum: 686f1fe8414d8577d39dd0f366f450ce5f429578cb0a011eda7d03bb20488d4156fd1e64b04b080d6eed01444df518538c4342b47e8db9df98ded99bef46e3fb
+  languageName: node
+  linkType: hard
+
 "@angular/cli@npm:~13.1.2":
   version: 13.1.2
   resolution: "@angular/cli@npm:13.1.2"
@@ -278,6 +295,23 @@ __metadata:
     "@angular/platform-browser": 13.1.1
     rxjs: ^6.5.3 || ^7.4.0
   checksum: 58bd5b1b6bc16caa58c9905d136d7acb1fa19799f3be080c82dd4c2dcb6503a869eff5e81485f269425984ff8488c914b98e29b59509bd1239ad405eea542eac
+  languageName: node
+  linkType: hard
+
+"@angular/material@npm:~13.1.0":
+  version: 13.1.3
+  resolution: "@angular/material@npm:13.1.3"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/animations": ^13.0.0 || ^14.0.0-0
+    "@angular/cdk": 13.1.3
+    "@angular/common": ^13.0.0 || ^14.0.0-0
+    "@angular/core": ^13.0.0 || ^14.0.0-0
+    "@angular/forms": ^13.0.0 || ^14.0.0-0
+    "@angular/platform-browser": ^13.0.0 || ^14.0.0-0
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 4b6a13d15741d2df504d7d500b342059d63715104dc6c4c77304262775ad8b8d108f7d178676947199a5dc952e615884841169d05f704884d1b8335937daa600
   languageName: node
   linkType: hard
 
@@ -2369,10 +2403,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/fira-mono@npm:4.5.0":
+  version: 4.5.0
+  resolution: "@fontsource/fira-mono@npm:4.5.0"
+  checksum: e99627013459f973f95f58ffde0a8729851588cbccb266a1e7790efdf5d20d8c078133130697b040c1ef98e6f96f37f5f41b81b982c2d04a1b269dd62577ba37
+  languageName: node
+  linkType: hard
+
+"@fontsource/material-icons@npm:4.5.1":
+  version: 4.5.1
+  resolution: "@fontsource/material-icons@npm:4.5.1"
+  checksum: e8e589417346f92790f54393ca5d190fa040091b9710a33103df13681d448b784c6a7b9b74595d016734cbb167d32ca523b5b8d1eac62eed790707db991ceb4b
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.0.1":
   version: 1.1.2
   resolution: "@gar/promisify@npm:1.1.2"
   checksum: d05081e0887a49c178b75ee3067bd6ee086f73c154d121b854fb2e044e8a89cb1cbb6de3a0dd93a519b80f0531fda68b099dd7256205f7fbb3490324342f2217
+  languageName: node
+  linkType: hard
+
+"@gravitee/ui-particles-angular@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@gravitee/ui-particles-angular@npm:2.2.0"
+  dependencies:
+    "@fontsource/fira-mono": 4.5.0
+    "@fontsource/material-icons": 4.5.1
+    tslib: 2.3.1
+  peerDependencies:
+    "@angular/animations": ^12.2.0
+    "@angular/cdk": ^12.2.0
+    "@angular/common": ^12.2.0
+    "@angular/core": ^12.2.0
+    "@angular/forms": ^12.2.0
+    "@angular/material": ^12.2.0
+  checksum: 62d84264ebe9237beee53a8516bec74576611a10cc3234cb2df62677d2b01049f047939b2278b39f64ff29380067813296b446962cea1ede11c8851d3430039f
   languageName: node
   linkType: hard
 
@@ -5225,17 +5291,20 @@ __metadata:
   dependencies:
     "@angular-devkit/build-angular": ~13.1.2
     "@angular/animations": ~13.1.0
+    "@angular/cdk": ~13.1.0
     "@angular/cli": ~13.1.2
     "@angular/common": ~13.1.0
     "@angular/compiler": ~13.1.0
     "@angular/compiler-cli": ~13.1.0
     "@angular/core": ~13.1.0
     "@angular/forms": ~13.1.0
+    "@angular/material": ~13.1.0
     "@angular/platform-browser": ~13.1.0
     "@angular/platform-browser-dynamic": ~13.1.0
     "@angular/router": ~13.1.0
     "@commitlint/cli": ^16.0.1
     "@commitlint/config-conventional": ^16.0.0
+    "@gravitee/ui-particles-angular": ^2.2.0
     "@storybook/addon-essentials": 6.5.0-alpha.20
     "@storybook/angular": 6.5.0-alpha.20
     "@storybook/builder-webpack5": 6.5.0-alpha.20
@@ -14061,6 +14130,13 @@ __metadata:
   dependencies:
     parse5: ^6.0.1
   checksum: c62961aeac04a1fc4a6ce1053520da935694abb877d2b8284258361768b10c424e2c1a25aec22aa1e7841d36a74caddf79a0544020bdb43c7d57f90a5f7bacca
+  languageName: node
+  linkType: hard
+
+"parse5@npm:^5.0.0":
+  version: 5.1.1
+  resolution: "parse5@npm:5.1.1"
+  checksum: 613a714af4c1101d1cb9f7cece2558e35b9ae8a0c03518223a4a1e35494624d9a9ad5fad4c13eab66a0e0adccd9aa3d522fc8f5f9cc19789e0579f3fa0bdfc65
   languageName: node
   linkType: hard
 
