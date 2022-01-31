@@ -20,7 +20,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
   @Input() width = 660;
   @Input() height = 500;
 
-  margins = { top: 40, right: 90, bottom: 50, left: 90 };
+  margins = { top: 20, right: 90, bottom: 30, left: 90 };
 
   data: Node;
 
@@ -55,7 +55,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const treeWidth = this.width - this.margins.left - this.margins.right;
     const treeHeight = this.height - this.margins.top - this.margins.bottom;
-    const treemap = tree().size([treeWidth, treeHeight]);
+    const treemap = tree().size([treeHeight, treeWidth]);
 
     const nodes = treemap(hierarchy(this.data));
 
@@ -77,16 +77,16 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
       .attr('class', 'link')
       .attr('d', (d) => {
         // prettier-ignore
-        return "M" + d.x + "," + d.y
+        return "M" + d.y + "," + d.x
           // prettier-ignore
           // @ts-ignore
-          + "C" + d.x + "," + (d.y + d.parent.y ?? 0) / 2
+          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
           // prettier-ignore
           // @ts-ignore
-          + " " + d.parent.x + "," +  (d.y + d.parent.y) / 2
+          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
           // prettier-ignore
           // @ts-ignore
-          + " " + d.parent.x + "," + d.parent.y;
+          + " " + d.parent.y + "," + d.parent.x;
       });
 
     const node = group
@@ -98,7 +98,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
         'class',
         (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
       )
-      .attr('transform', (d) => `translate(${d.x},${d.y})`);
+      .attr('transform', (d) => `translate(${d.y},${d.x})`);
 
     node
       .append('text')
