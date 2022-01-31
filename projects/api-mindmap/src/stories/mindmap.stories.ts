@@ -1,12 +1,15 @@
 import { Story } from '@storybook/angular';
-import { ApiMindmapComponent } from '../lib/api-mindmap.component';
+import { GioMindmapComponent } from '../lib/gio-mindmap';
 
 export default {
   title: 'Mindmap',
-  component: ApiMindmapComponent,
+  component: GioMindmapComponent,
+  parameters: {
+    backgrounds: { default: 'white' },
+  },
 };
 
-const Template: Story<ApiMindmapComponent> = (args: ApiMindmapComponent) => ({
+const Template: Story<GioMindmapComponent> = (args: GioMindmapComponent) => ({
   props: args,
 });
 

@@ -1,0 +1,16 @@
+gio-mindmap {
+  #mindmap {
+    width: 660px;
+    height: 500px;
+  }
+
+  svg {
+    background-color: #f7f8fd;
+  }
+
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+}

@@ -2,15 +2,21 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
+    "analytics": false,
     "packageManager": "yarn"
   },
   "newProjectRoot": "projects",
   "projects": {
     "api-mindmap": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/api-mindmap",
       "sourceRoot": "projects/api-mindmap/src",
-      "prefix": "lib",
+      "prefix": "gio",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -41,20 +47,10 @@
       "projectType": "library",
       "root": "./",
       "architect": {
-        "style-injection": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "tsConfig": ".storybook/tsconfig.json",
-            "styles": [".storybook/index.scss"],
-            "outputPath": "noop",
-            "index": "noop",
-            "main": "noop"
-          }
-        },
         "start": {
           "builder": "@storybook/angular:start-storybook",
           "options": {
-            "browserTarget": "storybook:style-injection",
+            "styles": [".storybook/index.scss"],
             "compodoc": false,
             "port": 9008
           }
@@ -62,7 +58,7 @@
         "build": {
           "builder": "@storybook/angular:build-storybook",
           "options": {
-            "browserTarget": "storybook:style-injection",
+            "styles": [".storybook/index.scss"],
             "compodoc": false
           }
         }
