@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { hierarchy, tree } from 'd3-hierarchy';
+import { linkHorizontal } from 'd3-shape';
 import * as d3 from 'd3';
 
 type Node = { name: string; direction?: string; children?: Node[] };
@@ -55,6 +56,11 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const treeWidth = this.width - this.margins.left - this.margins.right;
     const treeHeight = this.height - this.margins.top - this.margins.bottom;
+    const diagonalLink = linkHorizontal()
+      // don't understand the typings, but `d` seems to be HierarchyPointNode
+      .source((d: any) => [d.y, d.x])
+      .target((d: any) => [d.parent.y, d.parent.x]) as any;
+
     const treemap = tree().size([treeHeight, treeWidth]);
 
     const nodes = treemap(hierarchy(this.data));
@@ -75,19 +81,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', (d) => {
-        // prettier-ignore
-        return "M" + d.y + "," + d.x
-          // prettier-ignore
-          // @ts-ignore
-          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
-          // prettier-ignore
-          // @ts-ignore
-          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
-          // prettier-ignore
-          // @ts-ignore
-          + " " + d.parent.y + "," + d.parent.x;
-      });
+      .attr('d', diagonalLink);
 
     const node = group
       .selectAll('.node')
