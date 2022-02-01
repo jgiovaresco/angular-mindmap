@@ -105,5 +105,20 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
       .attr('dy', '.35em')
       .style('text-anchor', 'middle')
       .text((d) => (d.data as Node).name);
+
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([1, 8])
+      .on('zoom', (event) => {
+        group.attr('transform', () => {
+          // add the initial translation to every zoom translation
+          const newX = event.transform.x + this.margins.left;
+          const newY = event.transform.y + this.margins.top;
+
+          return `translate(${newX},${newY}) scale(${event.transform.k})`;
+        });
+      });
+
+    svg.call(zoom);
   }
 }
