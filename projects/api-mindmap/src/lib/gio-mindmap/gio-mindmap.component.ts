@@ -5,11 +5,13 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { hierarchy, tree } from 'd3-hierarchy';
+import { hierarchy, HierarchyPointNode, tree } from 'd3-hierarchy';
 import { linkHorizontal } from 'd3-shape';
 import * as d3 from 'd3';
 
 type Node = { name: string; direction?: string; children?: Node[] };
+
+type Margins = { top: number; right: number; bottom: number; left: number };
 
 @Component({
   selector: 'gio-mindmap',
@@ -21,7 +23,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
   @Input() width = 660;
   @Input() height = 500;
 
-  margins = { top: 20, right: 90, bottom: 30, left: 90 };
+  margins: Margins = { top: 0, right: 0, bottom: 0, left: 0 };
 
   data: Node;
 
@@ -42,7 +44,11 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
           name: 'Branch 3',
           direction: 'left',
           children: [
-            { name: 'Leaf 3', direction: 'left' },
+            {
+              name: 'Node 3',
+              direction: 'left',
+              children: [{ name: 'Leaf 3', direction: 'left' }],
+            },
             { name: 'Leaf 4', direction: 'left' },
           ],
         },
@@ -54,65 +60,130 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    const treeWidth = this.width - this.margins.left - this.margins.right;
-    const treeHeight = this.height - this.margins.top - this.margins.bottom;
-    const diagonalLink = linkHorizontal()
-      // don't understand the typings, but `d` seems to be HierarchyPointNode
-      .source((d: any) => [d.y, d.x])
-      .target((d: any) => [d.parent.y, d.parent.x]) as any;
-
-    const treemap = tree().size([treeHeight, treeWidth]);
-
-    const nodes = treemap(hierarchy(this.data));
-
     const svg = d3
       .select('#mindmap')
       .append('svg')
       .attr('width', this.width)
       .attr('height', this.height);
 
-    const group = svg
-      .append('g')
-      .attr('transform', `translate(${this.margins.left},${this.margins.top})`);
+    let group1: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+      group2: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
-    const link = group
-      .selectAll('.link')
-      .data(nodes.descendants().slice(1))
-      .enter()
-      .append('path')
-      .attr('class', 'link')
-      .attr('d', diagonalLink);
+    group1 = displayTree(
+      dataLeft(this.data),
+      svg,
+      {
+        height: this.height,
+        width: this.width,
+        margins: this.margins,
+      },
+      'right'
+    ).group;
 
-    const node = group
-      .selectAll('.node')
-      .data(nodes.descendants())
-      .enter()
-      .append('g')
-      .attr(
-        'class',
-        (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
-      )
-      .attr('transform', (d) => `translate(${d.y},${d.x})`);
-
-    node
-      .append('text')
-      .attr('dy', '.35em')
-      .style('text-anchor', 'middle')
-      .text((d) => (d.data as Node).name);
+    group2 = displayTree(
+      dataRight(this.data),
+      svg,
+      {
+        height: this.height,
+        width: this.width,
+        margins: this.margins,
+      },
+      'left'
+    ).group;
 
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([1, 8])
+      .scaleExtent([0, 2])
       .on('zoom', (event) => {
-        group.attr('transform', () => {
+        const transform = () => {
           // add the initial translation to every zoom translation
           const newX = event.transform.x + this.margins.left;
           const newY = event.transform.y + this.margins.top;
 
           return `translate(${newX},${newY}) scale(${event.transform.k})`;
-        });
+        };
+
+        group1?.attr('transform', transform);
+        group2?.attr('transform', transform);
       });
 
     svg.call(zoom);
   }
+}
+
+function dataLeft(data: Node): Node {
+  return {
+    ...data,
+    children: data.children?.filter((c) => c.direction === 'left') ?? [],
+  };
+}
+
+function dataRight(data: Node): Node {
+  return {
+    ...data,
+    children: data.children?.filter((c) => c.direction === 'right') ?? [],
+  };
+}
+
+function displayTree(
+  data: Node,
+  svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>,
+  {
+    height,
+    width,
+    margins,
+  }: { height: number; width: number; margins: Margins },
+  direction: 'left' | 'right'
+): {
+  group: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  nodes: d3.Selection<
+    SVGGElement,
+    HierarchyPointNode<unknown>,
+    SVGGElement,
+    any
+  >;
+} {
+  const treeWidth = width - margins.left - margins.right;
+  const treeHeight = height - margins.top - margins.bottom;
+
+  const diagonalLink = linkHorizontal()
+    // don't understand the typings, but `d` seems to be HierarchyPointNode
+    .source((d: any) => [d.y, d.x])
+    .target((d: any) => [d.parent.y, d.parent.x]) as any;
+
+  const inverse = direction === 'left' ? -1 : 1;
+
+  const root = tree().size([treeHeight, (inverse * treeWidth) / 2])(
+    hierarchy(data)
+  );
+  root.x = height / 2;
+
+  const group = svg
+    .append('g')
+    .attr('id', 'left-tree')
+    .attr('transform', `translate(${margins.left},${margins.top})`);
+  group
+    .selectAll('.link')
+    .data(root.descendants().slice(1))
+    .enter()
+    .append('path')
+    .attr('class', 'link')
+    .attr('d', diagonalLink);
+  const nodes = group
+    .selectAll('.node')
+    .data(root.descendants())
+    .enter()
+    .append('g')
+    .attr(
+      'class',
+      (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
+    )
+    .attr('transform', (d) => `translate(${d.y},${d.x})`);
+  nodes
+    .append('text')
+    .attr('dy', '.35em')
+    .style('text-anchor', 'middle')
+    .text((d) => (d.data as Node).name);
+
+  return { group, nodes };
 }
