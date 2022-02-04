@@ -74,7 +74,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
       .scaleExtent([0, 2])
       .on('zoom', (event) => {
         const transform = () => {
-          const newX = event.transform.x;
+          const newX = event.transform.x + this.width / 2;
           const newY = event.transform.y;
 
           return `translate(${newX},${newY}) scale(${event.transform.k})`;
@@ -116,20 +116,23 @@ function displayTree(
     .source((d: any) => [d.y, d.x])
     .target((d: any) => [d.parent.y, d.parent.x]) as any;
 
-  const rootLeft = tree().size([treeHeight, (-1 * treeWidth) / 2])(
+  const rootLeft = tree<Node>().size([treeHeight, (-1 * treeWidth) / 2])(
     hierarchy(dataLeft(data))
   );
   rootLeft.x = height / 2;
   const nodesLeft = rootLeft.descendants().slice(1);
 
-  const rootRight = tree().size([treeHeight, treeWidth / 2])(
+  const rootRight = tree<Node>().size([treeHeight, treeWidth / 2])(
     hierarchy(dataRight(data))
   );
   rootRight.x = height / 2;
 
   const allNodes = [...rootRight.descendants(), ...nodesLeft];
 
-  const group = svg.append('g').attr('id', 'tree');
+  const group = svg
+    .append('g')
+    .attr('id', 'tree')
+    .attr('transform', `translate(${width / 2}, 0)`);
   group
     .selectAll('.link')
     .data(allNodes.slice(1))
