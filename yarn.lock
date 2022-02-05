@@ -4467,6 +4467,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.178":
+  version: 4.14.178
+  resolution: "@types/lodash@npm:4.14.178"
+  checksum: a69a04a60bfc5257c3130a554b4efa0c383f0141b7b3db8ab7cf07ad2a46ea085fce66d0242da41da7e5647b133d5dfb2c15add9cbed8d7fef955e4a1e5b3128
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^3.0.0":
   version: 3.0.10
   resolution: "@types/mdast@npm:3.0.10"
@@ -5314,6 +5321,7 @@ __metadata:
     "@types/d3-shape": ^3.0.2
     "@types/d3-zoom": ^3.0.1
     "@types/jasmine": ~3.10.0
+    "@types/lodash": ^4.14.178
     "@types/node": ^12.11.1
     d3: 7.3.0
     d3-hierarchy: 3.1.1
@@ -5325,6 +5333,7 @@ __metadata:
     karma-jasmine: ~4.0.0
     karma-jasmine-html-reporter: ~1.7.0
     lint-staged: ^12.1.5
+    lodash: ^4.17.21
     ng-packagr: ^13.0.0
     prettier: ^2.5.1
     rxjs: ~7.4.0
