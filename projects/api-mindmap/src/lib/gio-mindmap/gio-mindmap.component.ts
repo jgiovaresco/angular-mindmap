@@ -9,7 +9,12 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import { linkHorizontal } from 'd3-shape';
 import * as d3 from 'd3';
 
-type Node = { name: string; direction?: string; children?: Node[] };
+type Node = {
+  nodeKey: string;
+  name: string;
+  direction?: string;
+  children: Node[];
+};
 
 @Component({
   selector: 'gio-mindmap',
@@ -25,30 +30,61 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
 
   constructor() {
     this.data = {
+      nodeKey: 'root',
       name: 'Root',
       children: [
         {
+          nodeKey: 'b1',
           name: 'Branch 1',
           direction: 'right',
           children: [
-            { name: 'Leaf 3', direction: 'right' },
-            { name: 'Leaf 4', direction: 'right' },
+            {
+              nodeKey: 'b11',
+              name: 'Leaf 3',
+              direction: 'right',
+              children: [],
+            },
+            {
+              nodeKey: 'b12',
+              name: 'Leaf 4',
+              direction: 'right',
+              children: [],
+            },
           ],
         },
-        { name: 'Branch 2', direction: 'left' },
         {
+          nodeKey: 'b2',
+          name: 'Branch 2',
+          direction: 'left',
+          children: [],
+        },
+        {
+          nodeKey: 'b3',
           name: 'Branch 3',
           direction: 'left',
           children: [
             {
+              nodeKey: 'b31',
               name: 'Node 3',
               direction: 'left',
-              children: [{ name: 'Leaf 3', direction: 'left' }],
+              children: [
+                {
+                  nodeKey: 'b311',
+                  name: 'Leaf 3',
+                  direction: 'left',
+                  children: [],
+                },
+              ],
             },
-            { name: 'Leaf 4', direction: 'left' },
+            { nodeKey: 'b31', name: 'Leaf 4', direction: 'left', children: [] },
           ],
         },
-        { name: 'Branch 4', direction: 'right' },
+        {
+          nodeKey: 'b4',
+          name: 'Branch 4',
+          direction: 'right',
+          children: [],
+        },
       ],
     };
   }
@@ -62,9 +98,7 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
       .attr('width', this.width)
       .attr('height', this.height);
 
-    let group: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
-
-    group = displayTree(this.data, svg, {
+    const group = displayTree(this.data, svg, {
       height: this.height,
       width: this.width,
     }).group;
@@ -90,14 +124,14 @@ export class GioMindmapComponent implements OnInit, AfterViewInit {
 function dataLeft(data: Node): Node {
   return {
     ...data,
-    children: data.children?.filter((c) => c.direction === 'left') ?? [],
+    children: data.children.filter((c) => c.direction === 'left') ?? [],
   };
 }
 
 function dataRight(data: Node): Node {
   return {
     ...data,
-    children: data.children?.filter((c) => c.direction === 'right') ?? [],
+    children: data.children.filter((c) => c.direction === 'right') ?? [],
   };
 }
 
@@ -116,16 +150,25 @@ function displayTree(
     .source((d: any) => [d.y, d.x])
     .target((d: any) => [d.parent.y, d.parent.x]) as any;
 
-  const rootLeft = tree<Node>().size([treeHeight, (-1 * treeWidth) / 2])(
-    hierarchy(dataLeft(data))
-  );
-  rootLeft.x = height / 2;
-  const nodesLeft = rootLeft.descendants().slice(1);
-
   const rootRight = tree<Node>().size([treeHeight, treeWidth / 2])(
     hierarchy(dataRight(data))
   );
-  rootRight.x = height / 2;
+  const rootLeft = tree<Node>().size([treeHeight, treeWidth / 2])(
+    hierarchy(dataLeft(data))
+  );
+
+  const dh = rootRight.x - rootLeft.x;
+  const nodesLeft = rootLeft.descendants().slice(1);
+  nodesLeft.forEach((d) => {
+    // align left/right nodes
+    d.x += dh;
+    d.y = -d.y;
+
+    // Update left tree nodes to merge both tree
+    if (d.parent?.data.nodeKey === rootLeft.data.nodeKey) {
+      d.parent = rootRight;
+    }
+  });
 
   const allNodes = [...rootRight.descendants(), ...nodesLeft];
 
