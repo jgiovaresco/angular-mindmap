@@ -1,3 +1,8 @@
+$bg-color: #f7f8fd;
+
+$path-color: #f5a623;
+$path-width: 4px;
+
 gio-mindmap {
   #mindmap {
     width: 660px;
@@ -5,12 +10,16 @@ gio-mindmap {
   }
 
   svg {
-    background-color: #f7f8fd;
+    background-color: $bg-color;
   }
 
   .link {
     fill: none;
-    stroke: #ccc;
-    stroke-width: 2px;
+    stroke: $path-color;
+    stroke-width: $path-width;
+  }
+
+  .label {
+    fill: $bg-color;
   }
 }

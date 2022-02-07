@@ -9,7 +9,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { hierarchy, tree } from 'd3-hierarchy';
+import { hierarchy, HierarchyPointNode, tree } from 'd3-hierarchy';
 import { linkHorizontal } from 'd3-shape';
 import * as d3 from 'd3';
 import { MindmapNode } from './gio-mindmap.model';
@@ -20,6 +20,8 @@ const EMPTY: MindmapNode = {
   name: 'empty',
   children: [],
 };
+
+const FONT_SIZE = 14;
 
 @Component({
   selector: 'gio-mindmap',
@@ -136,17 +138,29 @@ export class GioMindmapComponent implements AfterViewInit, OnInit, OnChanges {
     const nodesEnter = nodes
       .enter()
       .append('g')
+      .attr('id', (d) => d.data.nodeKey)
       .attr(
         'class',
         (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
       )
       .attr('transform', (d) => `translate(${d.y},${d.x})`);
 
+    nodesEnter.append('rect').attr('class', 'label');
+
     nodesEnter
       .append('text')
       .attr('dy', '.35em')
       .style('text-anchor', 'middle')
       .text((d) => d.data.name);
+
+    nodesEnter
+      .selectAll<SVGRectElement, HierarchyPointNode<MindmapNode>>(`rect.label`)
+      .attr('width', (d) => textNodeLength(d.data.nodeKey))
+      .attr('height', FONT_SIZE)
+      // move left square label to center the text
+      .attr('x', (d) => -textNodeLength(d.data.nodeKey) / 2)
+      // move up square label to center the text
+      .attr('y', -FONT_SIZE / 2);
 
     // Handle nodes update
     const nodeUpdate = nodes.transition();
@@ -167,4 +181,12 @@ function dataRight(data: MindmapNode): MindmapNode {
     ...data,
     children: data.children.filter((c) => c.direction === 'right') ?? [],
   };
+}
+
+function textNode(nodeKey: string) {
+  return d3.select(`g#${nodeKey}`).select<SVGTextElement>('text').node();
+}
+
+function textNodeLength(nodeKey: string) {
+  return textNode(nodeKey)?.getComputedTextLength() ?? 0;
 }
